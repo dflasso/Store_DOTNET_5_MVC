@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "/home/dlasso/.dotnet/store/|arch|/|tfm|",
+      "/home/dlasso/.nuget/packages"
+    ]
+  }
+}

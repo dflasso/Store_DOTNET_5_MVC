@@ -1,0 +1,194 @@
+<section class="container-root">
+    <div class="container">
+        <div class="row justify-content-md-center card">
+            <div class="col-md-auto">
+                @{
+                    List<Profile> LtsProfiles = ViewBag.LtsProfiles;
+                    if (LtsProfiles.Count > 0)
+                    {
+                        <table class="table table-sm">
+                            <thead class="table-light">
+                                <tr class="table-primary">
+                                    <th scope="col">#</th>
+                                    <th scope="col">Nombre del Perfil</th>
+                                    <th scope="col">Estado del Perfil</th>
+                                    <th scope="col">Asignación Permisos a Perfil</th>
+                                </tr>
+                            </thead>
+                            @{
+                                foreach (Profile pr in LtsProfiles)
+                                {
+                                    <tr class="table-light">
+                                        <th>@pr.ProfileId </th>
+                                        <th>@pr.ProfileName </th>
+                                        @{
+                                            if(pr.IsEnable)
+                                            {
+                                                <th>Activo</th>
+                                            }
+                                            else
+                                            {
+                                                <th>Inactivo</th>
+                                            }
+                                        } 
+                                        <th scope="row" class="align-middle">
+                                            <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                                                data-target="#Editar-Profiles"
+                                                onclick="page.onClickEditProfile('@pr.ProfileId')">
+                                               <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+  <!-- Modal -Editar -->
+  <div class="modal fade" id="Editar-Profiles" role="dialog">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Asignación Permisos a Perfil</h5>
+        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" aria-label="Close">X</button>
+      </div>
+       <form method="POST" action="/Config/PermissonsOfProfile">
+        <div class="modal-body">
+                <input type="hidden" id="modal-ProfileId"  name="Key"  />
+                <div class="mb-3">
+                    <label for="modal-ProfileName" class="form-label">Nombre Menu</label>
+                    <input type="text" class="form-control" id="modal-ProfileName" name="ProfileName"  >
+                </div>
+                  <hr/>
+                <div class="mb-1">
+                    <label class="form-label">Seleccione los permisos del Perfil: </label>
+                </div>
+                <div class="mb-1" id="containerOptionsPerm"></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-outline-primary" >Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  </div>
+
+@section Scripts {
+      
+<script>
+    const prms = [
+        @foreach (Profile pr in LtsProfiles)
+        {
+            @:{ "ProfileId": "@pr.ProfileId",  "ProfileName" : "@pr.ProfileName", "IsEnable":"@pr.IsEnable" },
+        }
+    ]
+
+    
+    const context = () => {
+        let prms = [];
+        let prmFound = {};
+        let permissons = [];
+        let optionsPermisson = [];
+        let awaitOptions = true;
+
+        const addPrf = (Pr = []) => {
+            prms = Pr;
+        }
+        const addPermss = (per = [] ) => {
+            permissons = per;
+        } 
+
+        const getPrms = () => prms;
+
+        const findProfile = (id ="") => {
+            let newPrms =  prms.filter( pr => pr.ProfileId === id);
+            return (newPrms.length > 0) ? newPrms[0] : null;
+        }
+
+        const onClickEditProfile = (id = "") => {
+            const profileFound = findProfile(id);
+            if(profileFound)
+            {
+                prmFound = profileFound;
+                document.getElementById("modal-ProfileId").value = profileFound.ProfileId; 
+                document.getElementById("modal-ProfileName").value = profileFound.ProfileName;
+                document.getElementById("containerOptionsPerm").innerHTML= render();
+                requestOptions(id);
+            }
+            
+        }
+
+        const getPrmFound = () => prmFound;
+
+        const selectedNewPermisson = (event) => 
+        {
+            console.log(event.target.value);
+        }
+
+
+        const getOptionsPermisson = () => optionsPermisson;
+        const setOptionsPermisson = (newOpt = []) => optionsPermisson = newOpt;
+
+        const isAwaitOptions = () => awaitOptions;
+
+        const requestOptions = (idProfile = "" ) => {
+            fetch(`/Config/SearchPermissons?idProfile=${idProfile}`)
+            .then(response => response.json())
+            .then(data => {
+                awaitOptions = false;
+                optionsPermisson = data;
+                document.getElementById("containerOptionsPerm").innerHTML=render();
+            } );
+        }
+
+        const render = () => {
+            if(awaitOptions){
+                return `
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">.</span>
+                </div>
+                `;
+            }else{
+                return buildOptions();
+            }
+        }
+
+        const buildOptions = () => {
+            let  html = "";
+            optionsPermisson.forEach( op => {
+                html = html + `
+                    <div class="form-check" >
+                        <input class="form-check-input" type="checkbox" value="${op.value}" id="${op.value}" name="PermissonsSelected" ${op.isSelected? 'checked' : null} />
+                        <label class="form-check-label" for="${op.value}" >
+                            ${op.label}
+                        </label>
+                    </div>    
+                `;
+            });
+            return html;
+        } 
+
+        return {
+            addPrf,
+            getPrms,
+            onClickEditProfile,
+            selectedNewPermisson,
+            addPermss,
+            getOptionsPermisson,
+            setOptionsPermisson,
+            isAwaitOptions,
+            requestOptions,
+            render
+        };
+    }
+
+    const page = context();
+    page.addPrf(prms);  
+</script>
+}

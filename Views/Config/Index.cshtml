@@ -1,0 +1,148 @@
+
+<section class="container-root">
+    <div class="container">
+        <div class="row justify-content-md-center card">
+            <div class="col-md-auto">
+                @{
+                    List<Permissions> permissions = ViewBag.LtsPermissons;
+
+                    if (@permissions.Count > 0)
+                    {
+                        <table class="table table-sm">
+                            <thead class="table-light">
+                                <tr class="table-primary">
+                                    <th scope="col">Nombre Menu</th>
+                                    <th scope="col">Título Página</th>
+                                    <th scope="col">Título Cabecera</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Editar</th>
+                                </tr>
+                            </thead>
+                            @{
+                                foreach (Permissions pr in permissions)
+                                {
+                                    <tr class="table-light">
+                                        <th>@pr.NameMenu </th>
+                                        <th>@pr.TittlePage </th>
+                                        <th>@pr.TittleHeader </th>
+                                        <th>@pr.Description </th>
+                                        <th scope="row">
+                                            <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                                                data-target="#Editar-Permissons" onclick="page.onClickEditPermissons('@pr.PermissionsId')" >
+                                                <i   class="bi bi-pencil-square"></i>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    }
+                    
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal -->
+  <div class="modal fade" id="Editar-Permissons" role="dialog">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Permiso</h5>
+        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" aria-label="Close">X</button>
+      </div>
+       <form method="POST" action="/Config/Index">
+        <div class="modal-body">
+                <input type="hidden" id="modal-PermissionsId"  name="PermissionsId"  />
+                <div class="mb-3">
+                    <label for="modal-nameMenu" class="form-label">Nombre Menu</label>
+                    <input type="text" class="form-control" id="modal-nameMenu" name="NameMenu"  >
+                </div>
+                <div class="mb-3">
+                    <label for="modal-titlePage" class="form-label">Título Página</label>
+                    <input type="text" class="form-control" id="modal-titlePage" name="TittlePage"  >
+                </div>
+                <div class="mb-3">
+                    <label for="modal-TittleHeader" class="form-label">Título Cabecera</label>
+                    <input type="text" class="form-control" id="modal-TittleHeader" name="TittleHeader" >
+                </div>
+                <div class="mb-3">
+                    <label for="modal-Description" class="form-label">Descripción</label>
+                    <input type="text" class="form-control" id="modal-Description" name="Description"  >
+                </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-outline-primary" >Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  </div>
+
+@section Scripts {
+                          
+<script>
+    const prms = [
+        @foreach (Permissions pr in permissions)
+        {
+            @:{ "PermissionsId": "@pr.PermissionsId",  "NameMenu" : "@pr.NameMenu", "TittlePage":"@pr.TittlePage", "TittleHeader":"@pr.TittleHeader", "Description": "@pr.Description"  },
+        }
+    ];
+    
+    const context = () => {
+        let prms = [];
+        let prmFound = {};
+
+        const addPrms = (Pr = []) => {
+            prms = Pr;
+        }
+
+        const getPrms = () => prms;
+
+        const findPermisson = (id ="") => {
+            let newPrms =  prms.filter( pr => pr.PermissionsId === id);
+            return (newPrms.length > 0) ? newPrms[0] : null;
+        }
+
+        const onClickEditPermissons = (id = "") => {
+            const permissonsFound = findPermisson(id);
+            if(permissonsFound)
+            {
+                prmFound = permissonsFound;
+                document.getElementById("modal-PermissionsId").value = permissonsFound.PermissionsId; 
+                document.getElementById("modal-nameMenu").value = permissonsFound.NameMenu;
+                document.getElementById("modal-titlePage").value = permissonsFound.TittlePage;
+                document.getElementById("modal-TittleHeader").value = permissonsFound.TittleHeader;
+                document.getElementById("modal-Description").value = permissonsFound.Description;
+            }
+            
+        }
+
+        const getPrmFound = () => prmFound;
+
+        return {
+            addPrms,
+            getPrms,
+            onClickEditPermissons
+        }
+    }
+
+    const page = context();
+    page.addPrms(prms);
+
+</script>
+}
+
+@{
+    Boolean updateSuccess = ViewBag.updatePermisson;
+    if(updateSuccess){
+            <script>
+                Swal.fire(
+                    'Permiso Actualizado',
+                    'success'
+                    )
+            </script>
+    }
+}

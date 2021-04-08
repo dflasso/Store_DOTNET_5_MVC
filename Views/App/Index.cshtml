@@ -1,0 +1,16 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<section class="container-root">
+    <article class="container-welcome">
+            Bienvenido al Sistema:
+            @{
+                string userName = ViewBag.userName;
+                if (userName != null)
+                {
+                    @userName
+                }
+            }
+    </article>
+</section>

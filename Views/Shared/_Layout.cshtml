@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] </title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/app.css" />
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="d-flex" id="wrapper">
+
+        <!-- Sidebar -->
+        <div class="bg-light border-right" id="sidebar-wrapper">
+            <div class="sidebar-heading">Menu </div>
+            <div class="list-group list-group-flush">
+                @{
+                    List<MenuItem> menu = ViewBag.menu;
+                    if (menu.Count > 0)
+                    {
+                        foreach (MenuItem item in menu)
+                        {
+                            <a class="menu-item" style=" color: white;"> @item.NameMenu </a>
+                            if (item.SubMenu != null)
+                            {
+                                foreach (MenuItem subItem in item.SubMenu)
+                                {
+
+                                    <a asp-controller="@subItem.Controller" asp-action="@subItem.Page" class="menu-subitem"> <i
+                                            class="bi bi-arrow-return-right"></i>
+                                        @subItem.NameMenu </a>
+                                }
+                            }
+                        }
+                    }
+                }
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <header id="header" class="header fixed-top">
+
+                <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+
+                    <button class="btn" id="menu-toggle"><i class="bi bi-list" style="font-size: 25px;"></i></button>
+
+                    <a class="logo d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                        <span>Comercializadora - @ViewData["Title"]</span>
+                    </a>
+
+                    <nav class="navbar navbar-expand-sm navbar-toggleable-sm ">
+                        <div class="container">
+
+                            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                                <ul class="navbar-nav flex-grow-1">
+                                    <li class="nav-item">
+
+                                        @{
+                                            string userName = ViewBag.userName;
+                                            if (userName != null)
+                                            {
+                                                <i class="bi bi-person-circle" style="font-size: 25px;"></i>
+                                                @userName
+                                            }
+                                        }
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="getstarted scrollto " asp-area="" asp-controller="Home"
+                                            asp-action="Privacy">Cerrar Sesión</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </header>
+
+
+            <main role="main" class="p-3">
+                @RenderBody()
+            </main>
+
+            <footer class="border-top footer text-muted">
+                <div class="container">
+                    &copy; 2021 - G10COMERCIALIZADORA_DOTNET - UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/main.js" asp-append-version="true"></script>
+    <script src="~/js/menu.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>
