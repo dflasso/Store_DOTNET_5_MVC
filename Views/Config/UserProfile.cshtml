@@ -1,0 +1,171 @@
+<section class="container-root">
+    <div class="container">
+        <div class="row justify-content-md-center card">
+            <div class="col-md-auto">
+                @{
+                    List<UserApp> LtsUsers = ViewBag.LtsUsers;
+                    if (LtsUsers.Count > 0)
+                    {
+                        <table class="table table-sm">
+                            <thead class="table-light">
+                                <tr class="table-primary">
+                                    <th scope="col">#</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Apellido</th>
+                                    <th scope="col">Correo</th>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col">Permisos</th>
+                                </tr>
+                            </thead>
+                            @foreach (UserApp us in LtsUsers)
+                            {
+                                <tr class="table-light">
+                                    <th scope="row">@us.UserAppId </th>
+                                    <th>@us.userName </th>
+                                    <th>@us.userLastname </th>
+                                    <th>@us.userEmail </th>
+                                    @switch (us.userType)
+                                    {
+                                        case 0:
+                                            <th>Cliente</th>
+                                            break;
+                                        case 1:
+                                            <th>Empleado</th>
+                                            break;
+                                        case 2:
+                                            <th>Proveedor</th>
+                                            break;
+                                        case 3:
+                                            <th>Administrador</th>
+                                            break;
+                                        default:
+                                            <th>Cliente</th>
+                                            break;
+                                    }
+                                    <th scope="row">
+                                        <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                                            data-target="#Edit-User" 
+                                            onclick="handleClickEdit('@us.UserAppId', '@us.userName' +' '+ '@us.userLastname', '@us.userEmail', '@us.userType')">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                    </th>
+                                </tr>
+                            }
+                        </table>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal Edit-->
+<div class="modal fade" id="Edit-User" role="dialog">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Gestionar Permisos del Usuario</h5>
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <form method="POST" action="/Config/UpdateProfileOfUser">
+                <div class="modal-body">
+                    <input  class="form-control"  type="hidden" id="modal-idUser" name="keyUser"/>
+                     <div class="mb-3 row">
+                        <label  class="col-sm-2 col-form-label">Nombre</label>
+                        <div class="col-sm-10">
+                            <input  class="form-control" disabled id="modal-nameUser"/>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label  class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                            <input  class="form-control" disabled id="modal-emailUser"/>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label  class="col-sm-2 col-form-label">Tipo</label>
+                        <div class="col-sm-10">
+                            <input class="form-control"  disabled id="modal-typeUser"/>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div id="profiles-container">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-outline-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let LtsProfiles = [];
+        const handleClickEdit = (idUser, nameUser, emailUser, typeUser) => {
+            switch (typeUser)
+            {
+                case 0:
+                    document.getElementById("modal-typeUser").value = 'Cliente';
+                    break;
+                case 1:
+                    document.getElementById("modal-typeUser").value = 'Empleado';
+                    break;
+                case 2:
+                    document.getElementById("modal-typeUser").value = 'Proveedor';
+                    break;
+                case 3:
+                    document.getElementById("modal-typeUser").value = 'Administrador';
+                    break;
+                default:
+                    document.getElementById("modal-typeUser").value = 'Cliente';
+                    break;
+            }
+             document.getElementById("modal-idUser").value = idUser; 
+             document.getElementById("modal-emailUser").value = emailUser; 
+             document.getElementById("modal-nameUser").value = nameUser;
+             render();
+             getProfilesOfUser(idUser);
+        }
+
+        const getProfilesOfUser = (idUser = "") => {
+            fetch(`/Config/SearchProfilOfUser?UserAppId=${idUser}`)
+            .then(response => response.json())
+            .then(data => {
+                LtsProfiles = data;
+                console.log(data);
+                render();
+            } );
+        }
+
+        const render = () => {
+            let htmlProfiles = "";
+            if(LtsProfiles.length > 0)
+            {
+                LtsProfiles.forEach(pr => {
+                    htmlProfiles = htmlProfiles + `
+                       <div class="form-check">
+                            <input class="form-check-input" type="radio" name="newProfileSelected" id="${pr.key}" value="${pr.key}" 
+                            ${pr.selectedProfile? "checked": "" }>
+                            <label class="form-check-label" for="${pr.key}">
+                               ${pr.label}
+                            </label>
+                        </div>
+                    `;
+                })
+            }else{
+                htmlProfiles = `
+                    <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">.</span>
+                    </div>
+                    </div>
+                `;
+            }
+            document.getElementById("profiles-container").innerHTML=htmlProfiles;
+        }
+    </script>
+}
