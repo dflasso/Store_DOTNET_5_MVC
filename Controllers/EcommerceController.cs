@@ -14,12 +14,14 @@ namespace G10COMERCIALIZADORA_DOTNET.Controllers
         private PageDataServices _pageDataServices;
         private readonly ILogger<EcommerceController> _logger;
         private CookiesServices _cookiesServices;
+        private ProductsModelServices _productsModelServices;
 
         public EcommerceController(CoreContext context,  ILogger<EcommerceController> logger)
         {
             _context = context;
             _pageDataServices = new PageDataServices(context,logger);
             _logger = logger;
+            _productsModelServices = new ProductsModelServices(context, logger);
         }
 
         [HttpGet]
@@ -45,6 +47,7 @@ namespace G10COMERCIALIZADORA_DOTNET.Controllers
             ViewBag.titleHeader = dataPage.TittleHeader;
             ViewBag.userName = _cookiesServices.Get(CookiesServices.nameCookie);
             ViewData["Title"] = dataPage.TittlePage;
+            ViewBag.LtsProducts = _productsModelServices.findAll();
             return View();
         }
 

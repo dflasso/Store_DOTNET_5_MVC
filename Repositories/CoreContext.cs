@@ -15,6 +15,16 @@ namespace G10COMERCIALIZADORA_DOTNET.Repositories
         public DbSet<PermissonsOfProfile> permissonsOfProfiles {get; set;}
         public DbSet<Profile> profiles {get; set;}
         public DbSet<UserProfile> userProfiles {get; set;}
+        public DbSet<Brand> brands {get; set;}
+        public DbSet<InvoiceDetail> invoiceDetails {get; set;}
+        public DbSet<Tax> taxes {get; set;}
+        public DbSet<SequentialSeller> sequentialSellers {get; set;}
+        public DbSet<Sequential> sequentials {get; set;}
+        public DbSet<Product> products {get; set;}
+        public DbSet<Payment> payments {get; set;}
+        public DbSet<Company> companies {get; set;}
+        public DbSet<Invoice> invoices {get; set;}
+        public DbSet<Category> categories {get; set;}
 
         public CoreContext(DbContextOptions<CoreContext> options) : base(options)
         {
@@ -28,6 +38,7 @@ namespace G10COMERCIALIZADORA_DOTNET.Repositories
 
             UsersDefaultData.CreateDefaulUsers(modelBuilder);
             ConfigDefaultApp.CreateConfigDefault(modelBuilder);
+            ProductsDefault.CreateDefaulProducts(modelBuilder);
         }
     }
 }
