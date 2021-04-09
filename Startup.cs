@@ -21,6 +21,7 @@ namespace G10COMERCIALIZADORA_DOTNET
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Añadimos servicios para Controladores y Vistas
             services.AddControllersWithViews();
             //Configuración de la base de datos
             services.AddDbContext<CoreContext>(
@@ -29,9 +30,10 @@ namespace G10COMERCIALIZADORA_DOTNET
 
             //Session state
             services.AddDistributedMemoryCache();
-
+            //Agregamos Servicios para manejar la sesión del usuario
             services.AddSession(options =>
             {
+                //La sesión del usuario dura 25 minutos
                 options.IdleTimeout = TimeSpan.FromMinutes(25);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;

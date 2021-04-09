@@ -15,6 +15,10 @@ namespace G10COMERCIALIZADORA_DOTNET.Controllers
         private readonly ILogger<EcommerceController> _logger;
         private CookiesServices _cookiesServices;
         private ProductsModelServices _productsModelServices;
+        private BrandModelServices _brandModelServices;
+        private CategoryModelServices _categoryModelServices;
+        private UserModelServices _userModelServices;
+        private CompanyModelServices _companyModelServices;
 
         public EcommerceController(CoreContext context,  ILogger<EcommerceController> logger)
         {
@@ -22,6 +26,10 @@ namespace G10COMERCIALIZADORA_DOTNET.Controllers
             _pageDataServices = new PageDataServices(context,logger);
             _logger = logger;
             _productsModelServices = new ProductsModelServices(context, logger);
+            _brandModelServices = new BrandModelServices(context, logger);
+            _categoryModelServices = new CategoryModelServices(context, logger);
+            _userModelServices = new UserModelServices(context,logger);
+            _companyModelServices = new CompanyModelServices(context,logger);
         }
 
         [HttpGet]
@@ -48,6 +56,9 @@ namespace G10COMERCIALIZADORA_DOTNET.Controllers
             ViewBag.userName = _cookiesServices.Get(CookiesServices.nameCookie);
             ViewData["Title"] = dataPage.TittlePage;
             ViewBag.LtsProducts = _productsModelServices.findAll();
+            ViewBag.LtsBrands = _brandModelServices.findAll();
+            ViewBag.LtsCategorys = _categoryModelServices.findAll();
+            ViewBag.LtsProvaiders =  _userModelServices.findByType(TypesUsers.PROVEEDORES);
             return View();
         }
 
@@ -74,6 +85,7 @@ namespace G10COMERCIALIZADORA_DOTNET.Controllers
             ViewBag.titleHeader = dataPage.TittleHeader;
             ViewBag.userName = _cookiesServices.Get(CookiesServices.nameCookie);
             ViewData["Title"] = dataPage.TittlePage;
+            ViewBag.Company = _companyModelServices.findFrist();
             return View();
         }
     }

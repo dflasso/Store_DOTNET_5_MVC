@@ -1,8 +1,53 @@
 <section class="container-root">
     <div class="container">
+        <div class="row mb-1">
+            <div class="col-4 card">
+                <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    Link with href
+                </a>
+                <div class="collapse" id="collapseExample">
+                    @{
+                        Company company = ViewBag.Company;
+                        <img src="data:image/png;base64,@company.CompanyLogo" class="card-img-top" alt="Logo-Los-Chinitos"
+                            style=" height: 200px; width: 200px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Razón Social: @company.CompanyBusinessName</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">RUC: @company.CompanyRUC </h6>
+                            <hr />
+                            <p class="card-text">Contactos: @company.CompanyPhone <br />
+                                Dirección: @company.CompanyAddress <br />
+                                Email: @company.CompanyEmail</p>
+                        </div>
+
+                    }
+                </div>
+            </div>
+            <div class="col-8 card">
+                <div class="row">
+                    comprobante
+                </div>
+                <div class="row">
+                    usuario
+                </div>
+            </div>
+        </div>
+        <div class="row mb-1 justify-content-md-center card">
+            <div class="col-md-auto">
+                buscar productos
+            </div>
+        </div>
         <div class="row justify-content-md-center card">
             <div class="col-md-auto">
-                factura
+                detalles
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-6 card">
+                forma de pago
+            </div>
+            <div class="col-6 card">
+                totales
             </div>
         </div>
     </div>

@@ -48,7 +48,7 @@ namespace G10COMERCIALIZADORA_DOTNET.Repositories
                 "temp",
                 "KKPpIz3t0sFYKFa6RLvVsxF4bmvZacKJ+OglgCB1/0vTZviH0yLHvhI5rYfZ6uONeb7AXbIOqxQlbKu0jagEHqFL/JhyUipqSBqJNG6SvyXR2DzDNMEYC/7h43rHX/xDf3xUHaFUo17V2VmyUnIpnOZ+KF3xXBjO64HpqyFXXtBrqonbJz0eBzd5gnmOMZfTJE2PTnDPry47dVfZAQL01z/HalLV7a6sO29QxXJ6/ZHnP6ryFW15458ZTqv/UUzw2opaK5GATs3gfPCnvbCsJVKcPDinPAyHFAgB7c6NBXe2775cNLBIDte0/eWdJj/RnrCladeV6Bgome+PQ9W+Fw==",
                 now, now,
-                "temp", "", "temp@gmail.com",
+                "Proveedor", "X", "temp@gmail.com",
                 "0999258183", (int)TypesUsers.PROVEEDORES, "1725038961", "", 1
             ));
 

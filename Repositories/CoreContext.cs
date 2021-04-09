@@ -5,6 +5,7 @@ namespace G10COMERCIALIZADORA_DOTNET.Repositories
 {
     public class CoreContext : DbContext
     {
+        //Agrega el mapeo de la tabla UserApp
         public DbSet<UserApp> Users { get; set; }
         public DbSet<HomeAddress> homeAddresses {get; set;}
         public DbSet<KeysApp> keys {get; set;}

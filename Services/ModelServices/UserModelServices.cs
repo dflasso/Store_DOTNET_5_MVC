@@ -10,7 +10,6 @@ namespace G10COMERCIALIZADORA_DOTNET.Services
     public class UserModelServices
     {
         private CoreContext _context;
-
         private readonly ILogger _logger;
 
         public UserModelServices(CoreContext context, ILogger logger)
@@ -73,6 +72,16 @@ namespace G10COMERCIALIZADORA_DOTNET.Services
                         .Where(u => u.UserAppId == UserAppId)
                         select user;
             return query.Single();
+        }
+
+        public List<UserApp> findByType(TypesUsers type)
+        {
+            var context = this._context;
+
+            var query = from user in context.Set<UserApp>()
+                        .Where(u => u.userType == (int)type)
+                        select user;
+            return query.ToList();
         }
 
         public List<UserApp> findAll()

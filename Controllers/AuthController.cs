@@ -29,6 +29,7 @@ namespace G10COMERCIALIZADORA_DOTNET.Controllers
             
         }
 
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
